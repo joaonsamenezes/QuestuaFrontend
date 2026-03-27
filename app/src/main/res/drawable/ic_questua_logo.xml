@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:pivotX="54"
+        android:pivotY="54">
+
+        <path
+            android:fillColor="#9B1C1C"
+            android:pathData="M54,12c-23.2,0 -42,18.8 -42,42c0,18.5 11.5,33.5 28.5,38.8L54,106l13.5,-13.2C84.5,87.5 96,72.5 96,54c0,-23.2 -18.8,-42 -42,-42zM54,84c-16.6,0 -30,-13.4 -30,-30s13.4,-30 30,-30s30,13.4 30,30S70.6,84 54,84z" />
+
+        <path
+            android:fillColor="#9B1C1C"
+            android:pathData="M78,78l14,14l6,-6l-14,-14z" />
+
+        <group
+            android:name="compass_internal"
+            android:pivotX="54"
+            android:pivotY="54">
+            <path
+                android:fillColor="#D4AF37"
+                android:pathData="M54,32l5,22l-10,0z" />
+            <path
+                android:fillColor="#C0A130"
+                android:pathData="M54,76l-5,-22l10,0z" />
+            <path
+                android:fillColor="#D4AF37"
+                android:pathData="M76,54l-22,-5l0,10z" />
+            <path
+                android:fillColor="#D4AF37"
+                android:pathData="M32,54l22,5l0,-10z" />
+            <path
+                android:fillColor="#D4AF37"
+                android:pathData="M66,42l-12,12l3,3zM66,66l-12,-12l-3,3zM42,66l12,-12l-3,-3zM42,42l12,12l-3,3z" />
+            <path
+                android:fillColor="#D4AF37"
+                android:pathData="M54,54m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+        </group>
+    </group>
+</vector>

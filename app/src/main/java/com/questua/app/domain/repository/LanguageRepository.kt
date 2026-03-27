@@ -1,0 +1,16 @@
+package com.questua.app.domain.repository
+
+import com.questua.app.core.common.Resource
+import com.questua.app.domain.model.Language
+import com.questua.app.domain.model.UserLanguage
+import kotlinx.coroutines.flow.Flow
+import java.io.File
+
+interface LanguageRepository {
+    fun getAvailableLanguages(query: String? = null): Flow<Resource<List<Language>>>
+    fun getLanguageById(id: String): Flow<Resource<Language>>
+    fun createLanguage(name: String, code: String, iconFile: File?): Flow<Resource<Language>>
+    fun updateLanguage(id: String, name: String, code: String, iconFile: File?): Flow<Resource<Language>>
+    fun deleteLanguage(id: String): Flow<Resource<Unit>>
+    fun getLeaderboard(adventurerTierId: String, cefrLevel: String, page: Int, size: Int): Flow<Resource<List<UserLanguage>>>
+}

@@ -1,0 +1,180 @@
+package com.questua.app.core.di
+
+import com.questua.app.data.remote.api.AchievementApi
+import com.questua.app.domain.repository.*
+import com.questua.app.domain.usecase.admin.feedback_management.DeleteReportUseCase
+import com.questua.app.domain.usecase.admin.feedback_management.GetReportDetailsUseCase
+import com.questua.app.domain.usecase.admin.feedback_management.GetUserReportsUseCase
+import com.questua.app.domain.usecase.admin.feedback_management.ResolveReportUseCase
+import com.questua.app.domain.usecase.admin.users.*
+import com.questua.app.domain.usecase.auth.*
+import com.questua.app.domain.usecase.exploration.*
+import com.questua.app.domain.usecase.feedback.SendReportUseCase
+import com.questua.app.domain.usecase.gameplay.*
+import com.questua.app.domain.usecase.language_learning.*
+import com.questua.app.domain.usecase.monetization.*
+import com.questua.app.domain.usecase.onboarding.*
+import com.questua.app.domain.usecase.quest.*
+import com.questua.app.domain.usecase.user.*
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
+
+@Module
+@InstallIn(ViewModelComponent::class)
+object UseCaseModule {
+
+    @Provides
+    @ViewModelScoped
+    fun provideLoginUseCase(repo: AuthRepository) = LoginUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideRegisterInitUseCase(repo: AuthRepository) = RegisterInitUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideRegisterVerifyUseCase(repo: AuthRepository) = RegisterVerifyUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetAvailableLanguagesUseCase(repo: LanguageRepository) = GetAvailableLanguagesUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetWorldMapUseCase(contentRepo: ContentRepository) =
+        GetWorldMapUseCase(contentRepo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetCityDetailsUseCase(repo: ContentRepository) = GetCityDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetCityQuestPointsUseCase(repo: ContentRepository) = GetCityQuestPointsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetQuestPointDetailsUseCase(repo: ContentRepository) = GetQuestPointDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetQuestPointQuestsUseCase(repo: ContentRepository) = GetQuestPointQuestsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideStartQuestUseCase(repo: GameRepository) = StartQuestUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideLoadSceneEngineUseCase(repo: ContentRepository) =
+        LoadSceneEngineUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSubmitDialogueResponseUseCase(repo: GameRepository) = SubmitDialogueResponseUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetNextDialogueUseCase(repo: GameRepository) = GetNextDialogueUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserProfileUseCase(repo: UserRepository) = GetUserProfileUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserLanguagesUseCase(repo: UserRepository) = GetUserLanguagesUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetLanguageDetailsUseCase(repo: LanguageRepository) = GetLanguageDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSetLearningLanguageUseCase(repo: UserRepository) = SetLearningLanguageUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideToggleAdminModeUseCase(repo: UserRepository) = ToggleAdminModeUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateUserProfileUseCase(repo: UserRepository) = UpdateUserProfileUseCase(repo)
+
+    /*
+    REMOVIDO: Estes UseCases agora são usados pelo AchievementMonitor (Singleton).
+    Eles não podem ser restritos ao ViewModelScoped.
+    O Hilt usará o @Inject constructor das classes automaticamente.
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserAchievementsUseCase(repo: UserRepository) = GetUserAchievementsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetAchievementDetailsUseCase(api: AchievementApi) = GetAchievementDetailsUseCase(api)
+    */
+
+    @Provides
+    @ViewModelScoped
+    fun provideSendReportUseCase(repo: UserRepository) = SendReportUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserReportsUseCase(repo: AdminRepository) = GetUserReportsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideResolveReportUseCase(repo: AdminRepository) = ResolveReportUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetReportDetailsUseCase(repo: AdminRepository) = GetReportDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideDeleteReportUseCase(repo: AdminRepository) = DeleteReportUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetAllUsersUseCase(repo: AdminRepository) = GetAllUsersUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserDetailsUseCase(repo: AdminRepository) = GetUserDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideCreateUserUseCase(repo: AdminRepository) = CreateUserUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateUserUseCase(repo: AdminRepository) = UpdateUserUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideDeleteUserUseCase(repo: AdminRepository) = DeleteUserUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetCharacterDetailsUseCase(repo: ContentRepository) = GetCharacterDetailsUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideCompleteQuestUseCase(repo: GameRepository) = CompleteQuestUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUnlockPreviewUseCase(repo: ContentRepository) = GetUnlockPreviewUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideUnlockContentUseCase(repo: ContentRepository) = UnlockContentUseCase(repo)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetUserStatsUseCase(repo: UserRepository) = GetUserStatsUseCase(repo)
+}

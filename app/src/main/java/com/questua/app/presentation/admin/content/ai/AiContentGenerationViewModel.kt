@@ -1,0 +1,151 @@
+package com.questua.app.presentation.admin.content.ai
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.questua.app.core.common.Resource
+import com.questua.app.domain.model.*
+import com.questua.app.domain.repository.AdminRepository
+import com.questua.app.presentation.navigation.Screen
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+enum class AiContentType { QUEST, QUEST_POINT, SCENE_DIALOGUE, CHARACTER, ACHIEVEMENT }
+
+@HiltViewModel
+class AiContentGenerationViewModel @Inject constructor(
+    private val repository: AdminRepository
+) : ViewModel() {
+
+    var state by mutableStateOf(AiGenerationState())
+        private set
+
+    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
+    init {
+        loadSelectors()
+    }
+
+    private fun loadSelectors() {
+        viewModelScope.launch {
+            launch {
+                repository.getCities().collect { result ->
+                    if (result is Resource.Success) {
+                        state = state.copy(cities = result.data ?: emptyList())
+                    }
+                }
+            }
+            launch {
+                repository.getQuestPoints().collect { result ->
+                    if (result is Resource.Success) {
+                        state = state.copy(questPoints = result.data ?: emptyList())
+                    }
+                }
+            }
+            launch {
+                repository.getQuests().collect { result ->
+                    if (result is Resource.Success) {
+                        state = state.copy(quests = result.data ?: emptyList())
+                    }
+                }
+            }
+            launch {
+                repository.getCharacters(null).collect { result ->
+                    if (result is Resource.Success) {
+                        state = state.copy(characters = result.data ?: emptyList())
+                    }
+                }
+            }
+        }
+    }
+
+    sealed class NavigationEvent {
+        data class Success(val route: String) : NavigationEvent()
+        data class Error(val message: String) : NavigationEvent()
+    }
+
+    fun onTypeSelected(type: AiContentType) {
+        state = state.copy(selectedType = type)
+    }
+
+    fun onFieldUpdate(field: String, value: String) {
+        state = state.copy(fields = state.fields.toMutableMap().apply { put(field, value) })
+    }
+
+    fun generate() {
+        viewModelScope.launch {
+            val flow: Flow<Resource<out Any>> = when (state.selectedType) {
+                AiContentType.QUEST_POINT -> repository.generateQuestPoint(
+                    cityId = state.fields["cityId"] ?: "",
+                    theme = state.fields["theme"] ?: ""
+                )
+                AiContentType.QUEST -> repository.generateQuest(
+                    questPointId = state.fields["questPointId"] ?: "",
+                    context = state.fields["context"] ?: "",
+                    difficulty = state.fields["difficulty"]?.toIntOrNull() ?: 1
+                )
+                AiContentType.SCENE_DIALOGUE -> repository.generateDialogue(
+                    speakerId = state.fields["speakerId"] ?: "",
+                    context = state.fields["context"] ?: "",
+                    questId = state.fields["questId"],
+                    inputMode = state.fields["inputMode"] ?: "CHOICE"
+                )
+                AiContentType.CHARACTER -> repository.generateCharacter(
+                    archetype = state.fields["archetype"] ?: ""
+                )
+                AiContentType.ACHIEVEMENT -> repository.generateAchievement(
+                    trigger = state.fields["trigger"] ?: "",
+                    difficulty = state.fields["difficulty"] ?: "EASY"
+                )
+            }
+
+            flow.collect { result ->
+                when (result) {
+                    is Resource.Loading -> state = state.copy(isLoading = true)
+                    is Resource.Success -> {
+                        state = state.copy(isLoading = false)
+                        processSuccess(result.data)
+                    }
+                    is Resource.Error -> {
+                        state = state.copy(isLoading = false)
+                        _navigationEvent.emit(NavigationEvent.Error(result.message ?: "Falha na geração"))
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun processSuccess(data: Any?) {
+        if (data == null) return
+
+        val route = when (data) {
+            is QuestPoint -> Screen.AdminQuestPointDetail.passId(data.id)
+            is Quest -> Screen.AdminQuestDetail.passId(data.id)
+            is CharacterEntity -> Screen.AdminCharacterDetail.passId(data.id)
+            is SceneDialogue -> Screen.AdminDialogueDetail.passId(data.id)
+            is Achievement -> Screen.AdminAchievementDetail.passId(data.id)
+            else -> ""
+        }
+
+        if (route.isNotEmpty()) {
+            _navigationEvent.emit(NavigationEvent.Success(route))
+        }
+    }
+}
+
+data class AiGenerationState(
+    val selectedType: AiContentType = AiContentType.QUEST_POINT,
+    val fields: Map<String, String> = emptyMap(),
+    val isLoading: Boolean = false,
+    val cities: List<City> = emptyList(),
+    val questPoints: List<QuestPoint> = emptyList(),
+    val quests: List<Quest> = emptyList(),
+    val characters: List<CharacterEntity> = emptyList()
+)
