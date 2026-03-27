@@ -8,9 +8,9 @@
 
 ## Overview
 
-Questua is a mobile application that provides a gamified language learning experience through quests, interactive dialogues and progression systems.
+Questua is a mobile application that delivers a gamified language learning experience through quests, interactive dialogues and progression systems.
 
-The app allows users to explore structured learning paths, interact with characters, and track their evolution using a dynamic progression model.
+Users explore structured learning paths, interact with characters, and track their evolution using a dynamic progression model.
 
 ---
 
@@ -27,19 +27,35 @@ The app allows users to explore structured learning paths, interact with charact
 
 ## Architecture
 
-The application is built using **MVVM (Model-View-ViewModel)** with clear separation of concerns:
+The application follows a layered architecture inspired by Clean Architecture principles.
 
-- **UI Layer (Compose)**  
-  Declarative UI built with Jetpack Compose
+- **Presentation Layer (Compose)**  
+  Responsible for UI rendering and state handling  
 
-- **ViewModel Layer**  
-  Handles UI state, business logic orchestration and lifecycle awareness
+- **Domain Layer**  
+  Contains core business models and domain logic  
 
-- **Domain / Data Layer**  
-  Responsible for API communication and data handling
+- **Data Layer**  
+  Handles repositories, API communication and data sources  
 
-- **Dependency Injection**  
-  Managed with Hilt for scalability and testability
+- **Core Layer**  
+  Provides shared modules, utilities and common configurations  
+
+### Key Characteristics
+
+- Clear separation of concerns  
+- Unidirectional data flow  
+- Dependency Injection with Hilt  
+- Scalable and maintainable structure  
+
+---
+
+## Project Structure
+
+- `presentation/` → Jetpack Compose screens and UI state handling  
+- `domain/` → core business models and domain entities  
+- `data/` → repositories, API services and data sources  
+- `core/` → shared modules, utilities and common configurations  
 
 ---
 
@@ -47,12 +63,11 @@ The application is built using **MVVM (Model-View-ViewModel)** with clear separa
 
 ### Quest System
 - Navigation through cities and quest points  
-- Structured learning progression  
+- Structured progression model  
 
 ### Dialogue Engine
 - Interactive dialogue flow  
-- Support for user choices and responses  
-- Dynamic progression between scenes  
+- Support for user input and branching paths  
 
 ### Progression System
 - XP accumulation  
@@ -60,27 +75,16 @@ The application is built using **MVVM (Model-View-ViewModel)** with clear separa
 - Quest completion metrics  
 
 ### Gamification
-- Achievement system  
-- Reward mechanics  
-- Progress-based unlockables  
+- Achievements and rewards  
+- Unlockable content based on progression  
 
 ---
 
 ## API Integration
 
 - Consumes REST endpoints from Questua Backend  
-- Handles user state, progression and content dynamically  
-- Structured data flow between layers  
-
----
-
-## Project Structure
-
-- `ui/` → Compose screens and components  
-- `viewmodel/` → state and UI logic  
-- `data/` → repositories and API layer  
-- `di/` → dependency injection modules  
-- `model/` → domain models  
+- Handles user progression and dynamic content  
+- Structured communication between layers  
 
 ---
 
@@ -88,16 +92,16 @@ The application is built using **MVVM (Model-View-ViewModel)** with clear separa
 
 ### Requirements
 
-- Android Studio
-- Android SDK
-- Kotlin
+- Android Studio  
+- Android SDK  
+- Kotlin  
 
 ### Setup
 
 1. Clone the repository  
 2. Open in Android Studio  
 3. Sync Gradle  
-4. Run the app on emulator or device  
+4. Run on emulator or physical device  
 
 ---
 
@@ -105,8 +109,8 @@ The application is built using **MVVM (Model-View-ViewModel)** with clear separa
 
 This project focuses on:
 
-- Modern Android development (Compose + MVVM)  
-- Scalable architecture patterns  
+- Modern Android development with Jetpack Compose  
+- Scalable architecture (MVVM + DI)  
 - State management and reactive UI  
 - Integration with complex backend systems  
 
